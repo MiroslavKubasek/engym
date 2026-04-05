@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Gym</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-2: #1f2937;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #22c55e;
+      --accent-2: #38bdf8;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #020617 0%, #0f172a 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .app {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .topbar {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .card {
+      background: rgba(17, 24, 39, 0.88);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.28);
+      backdrop-filter: blur(10px);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      line-height: 1.1;
+    }
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: end;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    select, button {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    button:hover, select:hover {
+      filter: brightness(1.08);
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .stat {
+      background: rgba(17,24,39,0.88);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .stat .label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    .stat .value {
+      font-size: 26px;
+      font-weight: 700;
+    }
+    .trainer {
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #bae6fd;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      width: fit-content;
+    }
+    .prompt {
+      font-size: clamp(30px, 5vw, 54px);
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 8px 0 0;
+    }
+    .answer {
+      font-size: clamp(28px, 4.2vw, 46px);
+      line-height: 1.15;
+      font-weight: 700;
+      color: #86efac;
+      min-height: 72px;
+    }
+    .hint {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .keys {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .key {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      background: var(--panel-2);
+      text-align: left;
+      transition: transform 0.12s ease, filter 0.12s ease, border-color 0.12s ease;
+    }
+    .key:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+    .key:active {
+      transform: translateY(0);
+    }
+    .key:focus-visible {
+      outline: 2px solid #bae6fd;
+      outline-offset: 2px;
+      border-color: #38bdf8;
+    }
+    .key strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    .success { color: #86efac; }
+    .danger { color: #fca5a5; }
+    .muted { color: var(--muted); }
+    .footer-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .footer-row button {
+      width: auto;
+      min-width: 150px;
+    }
+    .small {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .progressbar {
+      height: 10px;
+      background: #0b1220;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .progressbar > div {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+      transition: width 0.25s ease;
+    }
+    @media (max-width: 760px) {
+      .topbar, .controls, .stats, .keys {
+        grid-template-columns: 1fr;
+      }
+      .trainer {
+        min-height: 500px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="card">
+        <h1>English Gym</h1>
+        <p class="subtitle">Řekni si větu anglicky nahlas. <strong>Mezerník</strong> nejdřív ukáže správnou větu. Další <strong>mezerník</strong> = měl jsem to dobře, další věta. <strong>X</strong> = měl jsem to špatně, další věta. Chybovky se ukládají a budou se vracet častěji. Stejné akce můžeš i normálně klikat dole na kartách.</p>
+      </div>
+      <div class="card controls">
+        <div>
+          <label for="chapterSelect">Kapitola</label>
+          <select id="chapterSelect"></select>
+        </div>
+        <div>
+          <label for="modeSelect">Režim</label>
+          <select id="modeSelect">
+            <option value="chapter">Jen vybraná kapitola</option>
+            <option value="all">Všechny kapitoly</option>
+            <option value="wrong">Jen moje chybovky</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="label">Věty v balíku</div><div class="value" id="statTotal">0</div></div>
+      <div class="stat"><div class="label">Správně dnes</div><div class="value" id="statCorrect">0</div></div>
+      <div class="stat"><div class="label">Špatně dnes</div><div class="value" id="statWrong">0</div></div>
+      <div class="stat"><div class="label">Uložené chybovky</div><div class="value" id="statWrongBank">0</div></div>
+    </div>
+
+    <div class="card trainer">
+      <div>
+        <div class="badge" id="chapterBadge">Kapitola</div>
+        <div class="small" id="metaLine">Vzorec</div>
+        <div class="prompt" id="czechPrompt">Načítám…</div>
+      </div>
+
+      <div>
+        <div class="answer" id="englishAnswer">&nbsp;</div>
+        <div class="hint" id="hintLine">Řekni si to nahlas. Pak dej mezerník.</div>
+      </div>
+
+      <div>
+        <div class="progressbar"><div id="progressFill"></div></div>
+        <div class="small" id="progressText" style="margin-top:8px;">0 / 0</div>
+      </div>
+
+      <div class="keys">
+        <button type="button" class="key" id="spaceKeyBtn"><strong>Mezerník</strong><span class="muted">ukázat odpověď / potvrdit správně</span></button>
+        <button type="button" class="key" id="wrongKeyBtn"><strong>X</strong><span class="muted">označit jako špatně a jít dál</span></button>
+        <button type="button" class="key" id="resetTodayBtn"><strong>R</strong><span class="muted">resetovat dnešní statistiky</span></button>
+      </div>
+
+      <div class="footer-row">
+        <button id="showBtn">Ukázat odpověď</button>
+        <button id="correctBtn">Měl jsem to dobře</button>
+        <button id="wrongBtn">Měl jsem to špatně</button>
+        <button id="resetWrongBtn">Smazat chybovky</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'englishGymStateV1';
+
+    const verbs = [
+      { en: 'work', cs: 'pracovat' },
+      { en: 'live', cs: 'bydlet' },
+      { en: 'like', cs: 'mít rád' },
+      { en: 'want', cs: 'chtít' },
+      { en: 'need', cs: 'potřebovat' },
+      { en: 'know', cs: 'znát / vědět' },
+      { en: 'have', cs: 'mít' },
+      { en: 'call', cs: 'zavolat' },
+      { en: 'go', cs: 'jít / jet' },
+      { en: 'come', cs: 'přijít' },
+      { en: 'see', cs: 'vidět' },
+      { en: 'hear', cs: 'slyšet' },
+      { en: 'do', cs: 'udělat' },
+      { en: 'help', cs: 'pomoct' },
+      { en: 'finish', cs: 'dokončit' },
+      { en: 'say', cs: 'říct' },
+      { en: 'speak', cs: 'mluvit' },
+      { en: 'eat', cs: 'jíst' },
+      { en: 'drink', cs: 'pít' },
+      { en: 'buy', cs: 'koupit' },
+      { en: 'take', cs: 'vzít' },
+      { en: 'give', cs: 'dát' },
+      { en: 'find', cs: 'najít' },
+      { en: 'make', cs: 'udělat / vyrobit' },
+      { en: 'use', cs: 'používat' },
+      { en: 'open', cs: 'otevřít' },
+      { en: 'close', cs: 'zavřít' },
+      { en: 'read', cs: 'číst' },
+      { en: 'write', cs: 'psát' },
+      { en: 'wait', cs: 'čekat' },
+      { en: 'pay', cs: 'zaplatit' },
+      { en: 'meet', cs: 'potkat / sejít se' },
+      { en: 'start', cs: 'začít' },
+      { en: 'stop', cs: 'zastavit / přestat' },
+      { en: 'stay', cs: 'zůstat' },
+      { en: 'leave', cs: 'odejít' }
+    ];
+
+    const objects = [
+      { en: 'coffee', cs: 'kávu' },
+      { en: 'tea', cs: 'čaj' },
+      { en: 'water', cs: 'vodu' },
+      { en: 'breakfast', cs: 'snídani' },
+      { en: 'dinner', cs: 'večeři' },
+      { en: 'the car', cs: 'auto' },
+      { en: 'the door', cs: 'dveře' },
+      { en: 'the window', cs: 'okno' },
+      { en: 'the phone', cs: 'telefon' },
+      { en: 'your name', cs: 'tvoje jméno' },
+      { en: 'English', cs: 'anglicky' },
+      { en: 'money', cs: 'peníze' },
+      { en: 'time', cs: 'čas' },
+      { en: 'help', cs: 'pomoc' },
+      { en: 'a message', cs: 'zprávu' },
+      { en: 'the answer', cs: 'odpověď' },
+      { en: 'the problem', cs: 'problém' },
+      { en: 'this', cs: 'tohle' },
+      { en: 'that', cs: 'tamto' },
+      { en: 'the key', cs: 'klíč' },
+      { en: 'the ticket', cs: 'lístek' },
+      { en: 'the bill', cs: 'účet' },
+      { en: 'the email', cs: 'e-mail' },
+      { en: 'the book', cs: 'knihu' },
+      { en: 'the food', cs: 'jídlo' },
+      { en: 'the train', cs: 'vlak' },
+      { en: 'the bus', cs: 'autobus' },
+      { en: 'the hotel', cs: 'hotel' },
+      { en: 'the meeting', cs: 'schůzku' },
+      { en: 'the job', cs: 'práci' }
+    ];
+
+    const adjs = [
+      { en: 'tired', cs: 'unavený' },
+      { en: 'busy', cs: 'zaneprázdněný' },
+      { en: 'ready', cs: 'připravený' },
+      { en: 'late', cs: 'pozdě' },
+      { en: 'happy', cs: 'spokojený' },
+      { en: 'sure', cs: 'jistý' },
+      { en: 'good', cs: 'dobrý' },
+      { en: 'hungry', cs: 'hladový' },
+      { en: 'thirsty', cs: 'žíznivý' },
+      { en: 'free', cs: 'volný' },
+      { en: 'at home', cs: 'doma' },
+      { en: 'at work', cs: 'v práci' },
+      { en: 'here', cs: 'tady' },
+      { en: 'there', cs: 'tam' },
+      { en: 'right', cs: 'správně' },
+      { en: 'wrong', cs: 'špatně' },
+      { en: 'okay', cs: 'v pohodě' },
+      { en: 'fine', cs: 'v pořádku' }
+    ];
+
+    const people = [
+      { en: 'he', cs: 'on' },
+      { en: 'she', cs: 'ona' },
+      { en: 'they', cs: 'oni' },
+      { en: 'we', cs: 'my' }
+    ];
+
+    const irregularPast = {
+      go: 'go',
+      come: 'come',
+      see: 'see',
+      hear: 'hear',
+      eat: 'eat',
+      drink: 'drink',
+      buy: 'buy',
+      take: 'take',
+      give: 'give',
+      find: 'find',
+      make: 'make',
+      read: 'read',
+      meet: 'meet',
+      speak: 'speak',
+      have: 'have',
+      do: 'do'
+    };
+
+    function chunk(arr, size) {
+      const out = [];
+      for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+      return out;
+    }
+
+    function take(arr, n, offset = 0) {
+      const out = [];
+      for (let i = 0; i < n; i++) out.push(arr[(i + offset) % arr.length]);
+      return out;
+    }
+
+    function createChapter(id, title, pattern, items) {
+      return { id, title, pattern, items: items.map((item, index) => ({ ...item, id: `${id}-${index}` })) };
+    }
+
+    function buildChapters() {
+      const chapters = [];
+
+      const doYouItems = [
+        ['Pracuješ tady?', 'Do you work here?'],
+        ['Bydlíš poblíž?', 'Do you live nearby?'],
+        ['Máš chvilku?', 'Do you have a minute?'],
+        ['Potřebuješ pomoct?', 'Do you need help?'],
+        ['Víš to?', 'Do you know?'],
+        ['Rozumíš mi?', 'Do you understand me?'],
+        ['Chceš kávu?', 'Do you want some coffee?'],
+        ['Pamatuješ si ho?', 'Do you remember him?'],
+        ['Mluvíš anglicky?', 'Do you speak English?'],
+        ['Řídíš?', 'Do you drive?'],
+        ['Berete karty?', 'Do you take cards?'],
+        ['Chodíš sem často?', 'Do you come here often?'],
+        ['Líbí se ti to tady?', 'Do you like it here?'],
+        ['Potřebuješ odvoz?', 'Do you need a ride?'],
+        ['Chceš jít s námi?', 'Do you want to come with us?'],
+        ['Pracuješ zítra?', 'Do you work tomorrow?'],
+        ['Máš děti?', 'Do you have kids?'],
+        ['Znáš ji dobře?', 'Do you know her well?']
+      ].map(([cs, en]) => ({ cs, en }));
+      chapters.push(createChapter('do-you', '1. Do you…?', 'otázky v přítomném čase', doYouItems));
+
+      const yesIDoItems = [
+        ['Ano, pracuju tady.', 'Yes, I do.'],
+        ['Ano, bydlím poblíž.', 'Yes, I do.'],
+        ['Ano, chci kávu.', 'Yes, I do.'],
+        ['Ano, potřebuju pomoct.', 'Yes, I do.'],
+        ['Ano, mám chvilku.', 'Yes, I do.'],
+        ['Ano, mluvím anglicky.', 'Yes, I do.'],
+        ['Já to opravdu vím.', 'I really do know.'],
+        ['Já to opravdu chci.', 'I really do want it.'],
+        ['My to opravdu potřebujeme.', 'We really do need it.'],
+        ['Oni to opravdu chápou.', 'They really do understand.'],
+        ['Já si ho opravdu pamatuju.', 'I really do remember him.'],
+        ['Já to opravdu myslím vážně.', 'I really do mean it.'],
+        ['Oni tu opravdu pracují.', 'They really do work here.'],
+        ['My to tady opravdu máme rádi.', 'We really do like it here.']
+      ].map(([cs, en]) => ({ cs, en }));
+      chapters.push(createChapter('yes-i-do', '2. Yes, I do / I do…', 'krátké kladné odpovědi', yesIDoItems));
+
+      const dontItems = [
+        ['Nevím.', 'I don’t know.'],
+        ['Nechci to.', 'I don’t want it.'],
+        ['Nemám čas.', 'I don’t have time.'],
+        ['Nepotřebuju pomoct.', 'I don’t need help.'],
+        ['Nerozumím ti.', 'I don’t understand you.'],
+        ['Nejím maso.', 'I don’t eat meat.'],
+        ['Nepiju kávu.', 'I don’t drink coffee.'],
+        ['Neřídím.', 'I don’t drive.'],
+        ['Nemluvím moc anglicky.', 'I don’t speak much English.'],
+        ['Nepamatuju si ho.', 'I don’t remember him.'],
+        ['Nebydlíme tady.', 'We don’t live here.'],
+        ['Nepracuju zítra.', 'I don’t work tomorrow.'],
+        ['Nebereme karty.', 'We don’t take cards.'],
+        ['Nechodím sem často.', 'I don’t come here often.'],
+        ['Nemám to tu rád.', 'I don’t like it here.'],
+        ['Nevěřím mu.', 'I don’t trust him.']
+      ].map(([cs, en]) => ({ cs, en }));
+      chapters.push(createChapter('dont', '3. I don’t…', 'zápor v přítomném čase', dontItems));
+
+      const doesItems = [
+        ['Pracuje tady?', 'Does he work here?'],
+        ['Bydlí poblíž?', 'Does she live nearby?'],
+        ['Má chvilku?', 'Does he have a minute?'],
+        ['Potřebuje pomoct?', 'Does she need help?'],
+        ['Ví to?', 'Does he know?'],
+        ['Rozumí mi?', 'Does she understand me?'],
+        ['Chce kávu?', 'Does he want some coffee?'],
+        ['Pamatuje si mě?', 'Does she remember me?'],
+        ['Mluví anglicky?', 'Does he speak English?'],
+        ['Řídí?', 'Does she drive?'],
+        ['Chodí sem často?', 'Does he come here often?'],
+        ['Líbí se jí to tady?', 'Does she like it here?'],
+        ['Pracuje zítra?', 'Does he work tomorrow?'],
+        ['Zná ji dobře?', 'Does he know her well?'],
+        ['Věří mu?', 'Does she trust him?'],
+        ['Potřebuje odvoz?', 'Does she need a ride?']
+      ].map(([cs, en]) => ({ cs, en }));
+      chapters.push(createChapter('does', '4. Does he / she…?', 'otázky ve 3. osobě', doesItems));
+
+      const heDoesItems = [
+        ['Ano, on ano.', 'Yes, he does.'],
+        ['Ano, ona ano.', 'Yes, she does.'],
+        ['On to opravdu ví.', 'He really does know.'],
+        ['Ona to opravdu chce.', 'She really does want it.'],
+        ['On mi opravdu rozumí.', 'He really does understand me.'],
+        ['Ona si mě opravdu pamatuje.', 'She really does remember me.'],
+        ['On opravdu mluví anglicky.', 'He really does speak English.'],
+        ['Ona opravdu řídí každý den.', 'She really does drive every day.'],
+        ['On tu opravdu pracuje.', 'He really does work here.'],
+        ['Ona to tu opravdu má ráda.', 'She really does like it here.'],
+        ['On jí opravdu věří.', 'He really does trust her.'],
+        ['Ona to opravdu myslí vážně.', 'She really does mean it.']
+      ].map(([cs, en]) => ({ cs, en }));
+      chapters.push(createChapter('he-does', '5. He does / She does…', 'kladné odpovědi a důraz', heDoesItems));
+
+      const doesntItems = [
+        ['On neví.', 'He doesn’t know.'],
+        ['Ona to nechce.', 'She doesn’t want it.'],
+        ['On nemá čas.', 'He doesn’t have time.'],
+        ['Ona nepotřebuje pomoct.', 'She doesn’t need help.'],
+        ['On mi nerozumí.', 'He doesn’t understand me.'],
+        ['Ona si mě nepamatuje.', 'She doesn’t remember me.'],
+        ['On nemluví anglicky.', 'He doesn’t speak English.'],
+        ['Ona neřídí.', 'She doesn’t drive.'],
+        ['On tu nepracuje.', 'He doesn’t work here.'],
+        ['Ona to tu nemá ráda.', 'She doesn’t like it here.'],
+        ['On jí nevěří.', 'He doesn’t trust her.'],
+        ['Ona sem nechodí často.', 'She doesn’t come here often.'],
+        ['On zítra nepracuje.', 'He doesn’t work tomorrow.'],
+        ['Ona to nemyslí vážně.', 'She doesn’t mean it.']
+      ].map(([cs, en]) => ({ cs, en }));
+      chapters.push(createChapter('doesnt', '6. He doesn’t / She doesn’t…', 'zápor ve 3. osobě', doesntItems));
+
+      const didYouItems = [
+        ['Volal jsi mu?', 'Did you call him?'],
+        ['Viděl jsi ji?', 'Did you see her?'],
+        ['Slyšel jsi to?', 'Did you hear that?'],
+        ['Udělal jsi to?', 'Did you do it?'],
+        ['Šel jsi tam?', 'Did you go there?'],
+        ['Přišel jsi včas?', 'Did you arrive on time?'],
+        ['Pomohl jsi jí?', 'Did you help her?'],
+        ['Řekl jsi mu to?', 'Did you tell him?'],
+        ['Mluvil jsi s ní?', 'Did you talk to her?'],
+        ['Koupil jsi to?', 'Did you buy it?'],
+        ['Našel jsi to?', 'Did you find it?'],
+        ['Vzpomněl sis na to?', 'Did you remember?'],
+        ['Rozuměl jsi tomu?', 'Did you understand?'],
+        ['Pracoval jsi včera?', 'Did you work yesterday?'],
+        ['Spal jsi dobře?', 'Did you sleep well?'],
+        ['Měl jsi čas?', 'Did you have time?']
+      ].map(([cs, en]) => ({ cs, en }));
+      chapters.push(createChapter('did-you', '7. Did you…?', 'otázky v minulosti', didYouItems));
+
+      const iDidItems = [
+        ['Ano, volal jsem mu.', 'Yes, I did.'],
+        ['Ano, viděl jsem ji.', 'Yes, I did.'],
+        ['Ano, slyšel jsem to.', 'Yes, I did.'],
+        ['Ano, udělal jsem to.', 'Yes, I did.'],
+        ['Ano, přišel jsem včas.', 'I did arrive on time.'],
+        ['Ano, šel jsem tam.', 'I did go there.'],
+        ['Ano, pomohl jsem jí.', 'I did help her.'],
+        ['Ano, řekl jsem mu to.', 'I did tell him.'],
+        ['Ano, mluvil jsem s ní.', 'I did talk to her.'],
+        ['Ano, koupil jsem to.', 'I did buy it.'],
+        ['Ano, našel jsem to.', 'I did find it.'],
+        ['Ano, rozuměl jsem tomu.', 'I did understand.'],
+        ['Ano, pracoval jsem včera.', 'I did work yesterday.'],
+        ['Ano, spal jsem dobře.', 'I did sleep well.']
+      ].map(([cs, en]) => ({ cs, en }));
+      chapters.push(createChapter('i-did', '8. I did…', 'kladné odpovědi v minulosti', iDidItems));
+
+      const didntItems = [
+        ['Nevěděl jsem.', 'I didn’t know.'],
+        ['Nechtěl jsem to.', 'I didn’t want it.'],
+        ['Neviděl jsem ji.', 'I didn’t see her.'],
+        ['Neslyšel jsem to.', 'I didn’t hear that.'],
+        ['Neudělal jsem to.', 'I didn’t do it.'],
+        ['Nešel jsem tam.', 'I didn’t go there.'],
+        ['Nepřišel jsem včas.', 'I didn’t arrive on time.'],
+        ['Nepomohl jsem jí.', 'I didn’t help her.'],
+        ['Neřekl jsem mu to.', 'I didn’t tell him.'],
+        ['Nemluvil jsem s ní.', 'I didn’t talk to her.'],
+        ['Nekoupil jsem to.', 'I didn’t buy it.'],
+        ['Nenašel jsem to.', 'I didn’t find it.'],
+        ['Nevzpomněl jsem si na to.', 'I didn’t remember.'],
+        ['Nerozuměl jsem tomu.', 'I didn’t understand.'],
+        ['Nepracoval jsem včera.', 'I didn’t work yesterday.'],
+        ['Nespal jsem dobře.', 'I didn’t sleep well.']
+      ].map(([cs, en]) => ({ cs, en }));
+      chapters.push(createChapter('didnt', '9. I didn’t…', 'zápor v minulosti', didntItems));
+
+      const wasItems = [
+        ['Byl jsem unavený.', 'I was tired.'],
+        ['Byl jsem doma.', 'I was at home.'],
+        ['Byl jsem v práci.', 'I was at work.'],
+        ['Byl jsem tam.', 'I was there.'],
+        ['Bylo to v pohodě.', 'It was okay.'],
+        ['Bylo to dobré.', 'It was good.'],
+        ['Bylo to divné.', 'It was weird.'],
+        ['Byl jsem připravený.', 'I was ready.'],
+        ['Byl jsem hladový.', 'I was hungry.'],
+        ['Byl jsem volný.', 'I was free.'],
+        ['On přišel pozdě.', 'He was late.'],
+        ['Ona byla šťastná.', 'She was happy.'],
+        ['On byl zaneprázdněný.', 'He was busy.'],
+        ['Ona byla milá.', 'She was nice.'],
+        ['Bylo to těžké.', 'It was hard.'],
+        ['Bylo to snadné.', 'It was easy.']
+      ].map(([cs, en]) => ({ cs, en }));
+      chapters.push(createChapter('was', '10. I was / He was…', 'minulý čas slovesa to be', wasItems));
+
+      const wereItems = [
+        ['Byl jsi tam?', 'Were you there?'],
+        ['Byl jsi doma?', 'Were you at home?'],
+        ['Byl jsi v práci?', 'Were you at work?'],
+        ['Byl jsi připravený?', 'Were you ready?'],
+        ['Byl jsi unavený?', 'Were you tired?'],
+        ['Byl jsi volný?', 'Were you free?'],
+        ['Byl jsi v pohodě?', 'Were you okay?'],
+        ['Byli tady?', 'Were they here?'],
+        ['Byli tam?', 'Were they there?'],
+        ['Byli připravení?', 'Were they ready?'],
+        ['Byli spokojení?', 'Were they happy?'],
+        ['Byli zaneprázdnění?', 'Were they busy?'],
+        ['Byl doma?', 'Was he at home?'],
+        ['Byla v práci?', 'Was she at work?'],
+        ['Byl v pohodě?', 'Was he okay?'],
+        ['Byla milá?', 'Was she nice?']
+      ].map(([cs, en]) => ({ cs, en }));
+      chapters.push(createChapter('were', '11. Were you…? / Was he…?', 'otázky s was / were', wereItems));
+
+      const wasntItems = [
+        ['Nebyl jsem připravený.', 'I wasn’t ready.'],
+        ['Nebyl jsem doma.', 'I wasn’t at home.'],
+        ['Nebyl jsem v práci.', 'I wasn’t at work.'],
+        ['Nebyl jsem tam.', 'I wasn’t there.'],
+        ['Nebyl jsem v pohodě.', 'I wasn’t okay.'],
+        ['Nebyl jsem si jistý.', 'I wasn’t sure.'],
+        ['Nebyl jsem hladový.', 'I wasn’t hungry.'],
+        ['Nebyl pozdě.', 'He wasn’t late.'],
+        ['Nebyla šťastná.', 'She wasn’t happy.'],
+        ['Nebyli jsme volní.', 'We weren’t free.'],
+        ['Nebyli tady.', 'They weren’t here.'],
+        ['Nebyli zaneprázdnění.', 'They weren’t busy.'],
+        ['Nebyl doma.', 'He wasn’t at home.'],
+        ['Nebyla v práci.', 'She wasn’t at work.'],
+        ['Nebylo to těžké.', 'It wasn’t hard.'],
+        ['Nebylo to snadné.', 'It wasn’t easy.']
+      ].map(([cs, en]) => ({ cs, en }));
+      chapters.push(createChapter('wasnt', '12. I wasn’t / They weren’t…', 'zápor s was / were', wasntItems));
+
+      const willItems = [
+        ['Zavolám ti.', 'I’ll call you.'],
+        ['Udělám to.', 'I’ll do it.'],
+        ['Pomůžu ti.', 'I’ll help you.'],
+        ['Přijdu později.', 'I’ll come later.'],
+        ['Půjdu tam.', 'I’ll go there.'],
+        ['Dokončím to.', 'I’ll finish it.'],
+        ['Řeknu mu to.', 'I’ll tell him.'],
+        ['Napíšu ti zprávu.', 'I’ll text you.'],
+        ['Koupím to.', 'I’ll buy it.'],
+        ['Počkám.', 'I’ll wait.'],
+        ['Budu doma.', 'I’ll be home.'],
+        ['Pomůžeš mi?', 'Will you help me?'],
+        ['Zavoláš mi?', 'Will you call me?'],
+        ['Přijdeš?', 'Will you come?'],
+        ['Půjdeš tam?', 'Will you go there?'],
+        ['Počkáš na mě?', 'Will you wait for me?'],
+        ['Budeš doma?', 'Will you be home?']
+      ].map(([cs, en]) => ({ cs, en }));
+      chapters.push(createChapter('will', '13. I will / Will you…?', 'budoucnost', willItems));
+
+      const wontItems = [
+        ['Neudělám to.', 'I won’t do it.'],
+        ['Nezavolám mu.', 'I won’t call him.'],
+        ['Nepřijdu dnes.', 'I won’t come today.'],
+        ['Nepůjdu tam.', 'I won’t go there.'],
+        ['Nepomůžu mu.', 'I won’t help him.'],
+        ['Nedokončím to dnes.', 'I won’t finish it today.'],
+        ['Neřeknu mu to.', 'I won’t tell him.'],
+        ['Nenapíšu ti.', 'I won’t text you.'],
+        ['Nekoupím to.', 'I won’t buy it.'],
+        ['Nebudu čekat.', 'I won’t wait.'],
+        ['Nebudu doma.', 'I won’t be home.'],
+        ['Nepřijdou.', 'They won’t come.'],
+        ['Nepomůže nám.', 'He won’t help us.'],
+        ['Neřekne ano.', 'She won’t say yes.'],
+        ['Nepůjde tam.', 'He won’t go there.'],
+        ['Nebude to problém.', 'It won’t be a problem.']
+      ].map(([cs, en]) => ({ cs, en }));
+      chapters.push(createChapter('wont', '14. I won’t…', 'zápor v budoucnosti', wontItems));
+
+      return chapters;
+    }
+
+    const chapters = buildChapters();
+    const allItems = chapters.flatMap(ch => ch.items.map(item => ({ ...item, chapterId: ch.id, chapterTitle: ch.title, pattern: ch.pattern })));
+
+    const defaultState = {
+      chapterId: chapters[0].id,
+      mode: 'chapter',
+      currentId: null,
+      answerVisible: false,
+      correctToday: 0,
+      wrongToday: 0,
+      seenToday: 0,
+      wrongBank: {},
+      streak: 0,
+      totalAnswered: 0
+    };
+
+    let state = loadState();
+
+    const el = {
+      chapterSelect: document.getElementById('chapterSelect'),
+      modeSelect: document.getElementById('modeSelect'),
+      statTotal: document.getElementById('statTotal'),
+      statCorrect: document.getElementById('statCorrect'),
+      statWrong: document.getElementById('statWrong'),
+      statWrongBank: document.getElementById('statWrongBank'),
+      chapterBadge: document.getElementById('chapterBadge'),
+      metaLine: document.getElementById('metaLine'),
+      czechPrompt: document.getElementById('czechPrompt'),
+      englishAnswer: document.getElementById('englishAnswer'),
+      hintLine: document.getElementById('hintLine'),
+      progressFill: document.getElementById('progressFill'),
+      progressText: document.getElementById('progressText'),
+      showBtn: document.getElementById('showBtn'),
+      correctBtn: document.getElementById('correctBtn'),
+      wrongBtn: document.getElementById('wrongBtn'),
+      resetWrongBtn: document.getElementById('resetWrongBtn'),
+      spaceKeyBtn: document.getElementById('spaceKeyBtn'),
+      wrongKeyBtn: document.getElementById('wrongKeyBtn'),
+      resetTodayBtn: document.getElementById('resetTodayBtn')
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { ...defaultState };
+        return { ...defaultState, ...JSON.parse(raw) };
+      } catch {
+        return { ...defaultState };
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function getPool() {
+      if (state.mode === 'all') return allItems;
+      if (state.mode === 'wrong') {
+        const wrongIds = Object.keys(state.wrongBank).filter(id => state.wrongBank[id] > 0);
+        const wrongPool = allItems.filter(item => wrongIds.includes(item.id));
+        return wrongPool.length ? wrongPool : getChapterPool(state.chapterId);
+      }
+      return getChapterPool(state.chapterId);
+    }
+
+    function getChapterPool(chapterId) {
+      return allItems.filter(item => item.chapterId === chapterId);
+    }
+
+    function weightedPick(pool) {
+      if (!pool.length) return null;
+      const expanded = [];
+      for (const item of pool) {
+        const wrongCount = state.wrongBank[item.id] || 0;
+        const weight = 1 + Math.min(wrongCount * 3, 15);
+        for (let i = 0; i < weight; i++) expanded.push(item);
+      }
+      let pick = expanded[Math.floor(Math.random() * expanded.length)];
+      if (pool.length > 1 && state.currentId === pick.id) {
+        const alternatives = expanded.filter(item => item.id !== state.currentId);
+        if (alternatives.length) pick = alternatives[Math.floor(Math.random() * alternatives.length)];
+      }
+      return pick;
+    }
+
+    function currentItem() {
+      return allItems.find(item => item.id === state.currentId) || null;
+    }
+
+    function nextItem() {
+      const pool = getPool();
+      const item = weightedPick(pool);
+      state.currentId = item ? item.id : null;
+      state.answerVisible = false;
+      saveState();
+      render();
+    }
+
+    function showAnswer() {
+      if (!state.currentId) nextItem();
+      state.answerVisible = true;
+      saveState();
+      render();
+    }
+
+    function handleSpaceAction() {
+      if (!state.answerVisible) showAnswer();
+      else markCorrect();
+    }
+
+    function markCorrect() {
+      if (!state.currentId) return;
+      state.correctToday += 1;
+      state.seenToday += 1;
+      state.totalAnswered += 1;
+      state.streak += 1;
+      const id = state.currentId;
+      if (state.wrongBank[id]) {
+        state.wrongBank[id] = Math.max(0, state.wrongBank[id] - 1);
+        if (state.wrongBank[id] === 0) delete state.wrongBank[id];
+      }
+      saveState();
+      nextItem();
+    }
+
+    function markWrong() {
+      if (!state.currentId) return;
+      state.wrongToday += 1;
+      state.seenToday += 1;
+      state.totalAnswered += 1;
+      state.streak = 0;
+      const id = state.currentId;
+      state.wrongBank[id] = (state.wrongBank[id] || 0) + 1;
+      saveState();
+      nextItem();
+    }
+
+    function resetToday() {
+      state.correctToday = 0;
+      state.wrongToday = 0;
+      state.seenToday = 0;
+      state.streak = 0;
+      saveState();
+      render();
+    }
+
+    function resetWrongBank() {
+      state.wrongBank = {};
+      saveState();
+      render();
+    }
+
+    function populateChapterSelect() {
+      el.chapterSelect.innerHTML = chapters
+        .map(ch => `<option value="${ch.id}">${ch.title} (${ch.items.length})</option>`)
+        .join('');
+      el.chapterSelect.value = state.chapterId;
+      el.modeSelect.value = state.mode;
+    }
+
+    function render() {
+      const item = currentItem();
+      const pool = getPool();
+      const wrongBankSize = Object.keys(state.wrongBank).length;
+
+      el.statTotal.textContent = pool.length;
+      el.statCorrect.textContent = state.correctToday;
+      el.statWrong.textContent = state.wrongToday;
+      el.statWrongBank.textContent = wrongBankSize;
+
+      if (!item) {
+        el.chapterBadge.textContent = 'Žádné věty';
+        el.metaLine.textContent = '';
+        el.czechPrompt.textContent = 'V tomhle režimu teď nic není.';
+        el.englishAnswer.innerHTML = '&nbsp;';
+        el.hintLine.textContent = 'Vyber kapitolu nebo změň režim.';
+        el.progressFill.style.width = '0%';
+        el.progressText.textContent = '0 / 0';
+        return;
+      }
+
+      el.chapterBadge.textContent = item.chapterTitle;
+      el.metaLine.textContent = `${item.pattern} • streak: ${state.streak}`;
+      el.czechPrompt.textContent = item.cs;
+      el.englishAnswer.textContent = state.answerVisible ? item.en : '…';
+      el.hintLine.innerHTML = state.answerVisible
+        ? '<span class="success">Mezerník</span> = měl jsem to dobře • <span class="danger">X</span> = měl jsem to špatně'
+        : 'Řekni si to nahlas. Pak dej <strong>mezerník</strong>.';
+
+      const answered = state.correctToday + state.wrongToday;
+      const totalForBar = Math.max(pool.length, 1);
+      const percent = Math.min((answered / totalForBar) * 100, 100);
+      el.progressFill.style.width = `${percent}%`;
+      el.progressText.textContent = `${answered} odpovědí dnes • ${pool.length} vět v balíku`;
+    }
+
+    el.chapterSelect.addEventListener('change', (e) => {
+      state.chapterId = e.target.value;
+      saveState();
+      nextItem();
+    });
+
+    el.modeSelect.addEventListener('change', (e) => {
+      state.mode = e.target.value;
+      saveState();
+      nextItem();
+    });
+
+    el.showBtn.addEventListener('click', showAnswer);
+    el.correctBtn.addEventListener('click', handleSpaceAction);
+    el.wrongBtn.addEventListener('click', markWrong);
+    el.resetWrongBtn.addEventListener('click', resetWrongBank);
+    el.spaceKeyBtn.addEventListener('click', handleSpaceAction);
+    el.wrongKeyBtn.addEventListener('click', markWrong);
+    el.resetTodayBtn.addEventListener('click', resetToday);
+
+    document.addEventListener('keydown', (e) => {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        handleSpaceAction();
+      } else if (e.key === 'x' || e.key === 'X') {
+        e.preventDefault();
+        markWrong();
+      } else if (e.key === 'r' || e.key === 'R') {
+        e.preventDefault();
+        resetToday();
+      }
+    });
+
+    populateChapterSelect();
+    if (!state.currentId) nextItem();
+    else render();
+  </script>
+</body>
+</html>
