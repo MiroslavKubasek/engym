@@ -158,10 +158,17 @@
       min-height: 72px;
     }
 
+    .answer-block {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
     .hint {
       color: var(--muted);
       font-size: 15px;
       line-height: 1.5;
+      min-height: 1.5em;
     }
 
     .keys {
@@ -248,6 +255,22 @@
       .trainer {
         min-height: 500px;
       }
+
+      .prompt {
+        min-height: 2.6em;
+      }
+
+      .answer-block {
+        min-height: 7.4em;
+      }
+
+      .answer {
+        min-height: 3.45em;
+      }
+
+      .hint {
+        min-height: 3em;
+      }
     }
   </style>
 </head>
@@ -288,7 +311,7 @@
         <div class="prompt" id="czechPrompt">Načítám…</div>
       </div>
 
-      <div>
+      <div class="answer-block">
         <div class="answer" id="englishAnswer">&nbsp;</div>
         <div class="hint" id="hintLine">Řekni si to nahlas. Pak dej mezerník.</div>
       </div>
