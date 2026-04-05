@@ -14,10 +14,11 @@
       --accent: #22c55e;
       --accent-2: #38bdf8;
       --danger: #ef4444;
-      --warning: #f59e0b;
       --border: #334155;
     }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -25,47 +26,55 @@
       color: var(--text);
       min-height: 100vh;
     }
+
     .app {
       max-width: 980px;
       margin: 0 auto;
       padding: 20px;
     }
+
     .topbar {
       display: grid;
       grid-template-columns: 1.3fr 1fr;
       gap: 16px;
       margin-bottom: 16px;
     }
+
     .card {
       background: rgba(17, 24, 39, 0.88);
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 16px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.28);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
       backdrop-filter: blur(10px);
     }
+
     h1 {
       margin: 0 0 8px;
       font-size: 30px;
       line-height: 1.1;
     }
+
     .subtitle {
       margin: 0;
       color: var(--muted);
       line-height: 1.5;
     }
+
     .controls {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
       align-items: end;
     }
+
     label {
       display: block;
       font-size: 13px;
       color: var(--muted);
       margin-bottom: 8px;
     }
+
     select, button {
       width: 100%;
       border: 1px solid var(--border);
@@ -76,30 +85,42 @@
       font-size: 15px;
       cursor: pointer;
     }
+
     button:hover, select:hover {
       filter: brightness(1.08);
     }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+      filter: none;
+    }
+
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 12px;
       margin-bottom: 16px;
     }
+
     .stat {
-      background: rgba(17,24,39,0.88);
+      background: rgba(17, 24, 39, 0.88);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 14px;
     }
+
     .stat .label {
       color: var(--muted);
       font-size: 12px;
       margin-bottom: 6px;
     }
+
     .stat .value {
       font-size: 26px;
       font-weight: 700;
     }
+
     .trainer {
       min-height: 420px;
       display: flex;
@@ -107,6 +128,7 @@
       justify-content: space-between;
       gap: 20px;
     }
+
     .badge {
       display: inline-flex;
       align-items: center;
@@ -119,6 +141,7 @@
       font-size: 13px;
       width: fit-content;
     }
+
     .prompt {
       font-size: clamp(30px, 5vw, 54px);
       line-height: 1.1;
@@ -126,6 +149,7 @@
       letter-spacing: -0.02em;
       margin: 8px 0 0;
     }
+
     .answer {
       font-size: clamp(28px, 4.2vw, 46px);
       line-height: 1.15;
@@ -133,16 +157,19 @@
       color: #86efac;
       min-height: 72px;
     }
+
     .hint {
       color: var(--muted);
       font-size: 15px;
       line-height: 1.5;
     }
+
     .keys {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 12px;
     }
+
     .key {
       border: 1px solid var(--border);
       border-radius: 14px;
@@ -151,39 +178,48 @@
       text-align: left;
       transition: transform 0.12s ease, filter 0.12s ease, border-color 0.12s ease;
     }
+
     .key:hover {
       filter: brightness(1.08);
       transform: translateY(-1px);
     }
+
     .key:active {
       transform: translateY(0);
     }
+
     .key:focus-visible {
       outline: 2px solid #bae6fd;
       outline-offset: 2px;
       border-color: #38bdf8;
     }
+
     .key strong {
       display: block;
       font-size: 18px;
       margin-bottom: 6px;
     }
+
     .success { color: #86efac; }
     .danger { color: #fca5a5; }
     .muted { color: var(--muted); }
+
     .footer-row {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
     }
+
     .footer-row button {
       width: auto;
       min-width: 150px;
     }
+
     .small {
       font-size: 13px;
       color: var(--muted);
     }
+
     .progressbar {
       height: 10px;
       background: #0b1220;
@@ -191,16 +227,24 @@
       overflow: hidden;
       border: 1px solid var(--border);
     }
+
     .progressbar > div {
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
       transition: width 0.25s ease;
     }
+
+    .speak-active {
+      border-color: #38bdf8 !important;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.22);
+    }
+
     @media (max-width: 760px) {
       .topbar, .controls, .stats, .keys {
         grid-template-columns: 1fr;
       }
+
       .trainer {
         min-height: 500px;
       }
@@ -212,7 +256,7 @@
     <div class="topbar">
       <div class="card">
         <h1>English Gym</h1>
-        <p class="subtitle">Řekni si větu anglicky nahlas. <strong>Mezerník</strong> nejdřív ukáže správnou větu. Další <strong>mezerník</strong> = měl jsem to dobře, další věta. <strong>X</strong> = měl jsem to špatně, další věta. Chybovky se ukládají a budou se vracet častěji. Stejné akce můžeš i normálně klikat dole na kartách.</p>
+        <p class="subtitle">Řekni si větu anglicky nahlas. <strong>Mezerník</strong> nejdřív ukáže správnou větu. Další <strong>mezerník</strong> = měl jsem to dobře, další věta. <strong>X</strong> = měl jsem to špatně, další věta. <strong>V</strong> = přečíst anglickou větu nahlas. Chybovky se ukládají a budou se vracet častěji. Stejné akce můžeš i normálně klikat dole na kartách.</p>
       </div>
       <div class="card controls">
         <div>
@@ -258,150 +302,21 @@
         <button type="button" class="key" id="spaceKeyBtn"><strong>Mezerník</strong><span class="muted">ukázat odpověď / potvrdit správně</span></button>
         <button type="button" class="key" id="wrongKeyBtn"><strong>X</strong><span class="muted">označit jako špatně a jít dál</span></button>
         <button type="button" class="key" id="resetTodayBtn"><strong>R</strong><span class="muted">resetovat dnešní statistiky</span></button>
+        <button type="button" class="key" id="speakKeyBtn"><strong>V</strong><span class="muted">přečíst anglickou větu nahlas</span></button>
       </div>
 
       <div class="footer-row">
         <button id="showBtn">Ukázat odpověď</button>
         <button id="correctBtn">Měl jsem to dobře</button>
         <button id="wrongBtn">Měl jsem to špatně</button>
+        <button id="speakBtn">Přehrát větu</button>
         <button id="resetWrongBtn">Smazat chybovky</button>
       </div>
     </div>
   </div>
 
   <script>
-    const STORAGE_KEY = 'englishGymStateV1';
-
-    const verbs = [
-      { en: 'work', cs: 'pracovat' },
-      { en: 'live', cs: 'bydlet' },
-      { en: 'like', cs: 'mít rád' },
-      { en: 'want', cs: 'chtít' },
-      { en: 'need', cs: 'potřebovat' },
-      { en: 'know', cs: 'znát / vědět' },
-      { en: 'have', cs: 'mít' },
-      { en: 'call', cs: 'zavolat' },
-      { en: 'go', cs: 'jít / jet' },
-      { en: 'come', cs: 'přijít' },
-      { en: 'see', cs: 'vidět' },
-      { en: 'hear', cs: 'slyšet' },
-      { en: 'do', cs: 'udělat' },
-      { en: 'help', cs: 'pomoct' },
-      { en: 'finish', cs: 'dokončit' },
-      { en: 'say', cs: 'říct' },
-      { en: 'speak', cs: 'mluvit' },
-      { en: 'eat', cs: 'jíst' },
-      { en: 'drink', cs: 'pít' },
-      { en: 'buy', cs: 'koupit' },
-      { en: 'take', cs: 'vzít' },
-      { en: 'give', cs: 'dát' },
-      { en: 'find', cs: 'najít' },
-      { en: 'make', cs: 'udělat / vyrobit' },
-      { en: 'use', cs: 'používat' },
-      { en: 'open', cs: 'otevřít' },
-      { en: 'close', cs: 'zavřít' },
-      { en: 'read', cs: 'číst' },
-      { en: 'write', cs: 'psát' },
-      { en: 'wait', cs: 'čekat' },
-      { en: 'pay', cs: 'zaplatit' },
-      { en: 'meet', cs: 'potkat / sejít se' },
-      { en: 'start', cs: 'začít' },
-      { en: 'stop', cs: 'zastavit / přestat' },
-      { en: 'stay', cs: 'zůstat' },
-      { en: 'leave', cs: 'odejít' }
-    ];
-
-    const objects = [
-      { en: 'coffee', cs: 'kávu' },
-      { en: 'tea', cs: 'čaj' },
-      { en: 'water', cs: 'vodu' },
-      { en: 'breakfast', cs: 'snídani' },
-      { en: 'dinner', cs: 'večeři' },
-      { en: 'the car', cs: 'auto' },
-      { en: 'the door', cs: 'dveře' },
-      { en: 'the window', cs: 'okno' },
-      { en: 'the phone', cs: 'telefon' },
-      { en: 'your name', cs: 'tvoje jméno' },
-      { en: 'English', cs: 'anglicky' },
-      { en: 'money', cs: 'peníze' },
-      { en: 'time', cs: 'čas' },
-      { en: 'help', cs: 'pomoc' },
-      { en: 'a message', cs: 'zprávu' },
-      { en: 'the answer', cs: 'odpověď' },
-      { en: 'the problem', cs: 'problém' },
-      { en: 'this', cs: 'tohle' },
-      { en: 'that', cs: 'tamto' },
-      { en: 'the key', cs: 'klíč' },
-      { en: 'the ticket', cs: 'lístek' },
-      { en: 'the bill', cs: 'účet' },
-      { en: 'the email', cs: 'e-mail' },
-      { en: 'the book', cs: 'knihu' },
-      { en: 'the food', cs: 'jídlo' },
-      { en: 'the train', cs: 'vlak' },
-      { en: 'the bus', cs: 'autobus' },
-      { en: 'the hotel', cs: 'hotel' },
-      { en: 'the meeting', cs: 'schůzku' },
-      { en: 'the job', cs: 'práci' }
-    ];
-
-    const adjs = [
-      { en: 'tired', cs: 'unavený' },
-      { en: 'busy', cs: 'zaneprázdněný' },
-      { en: 'ready', cs: 'připravený' },
-      { en: 'late', cs: 'pozdě' },
-      { en: 'happy', cs: 'spokojený' },
-      { en: 'sure', cs: 'jistý' },
-      { en: 'good', cs: 'dobrý' },
-      { en: 'hungry', cs: 'hladový' },
-      { en: 'thirsty', cs: 'žíznivý' },
-      { en: 'free', cs: 'volný' },
-      { en: 'at home', cs: 'doma' },
-      { en: 'at work', cs: 'v práci' },
-      { en: 'here', cs: 'tady' },
-      { en: 'there', cs: 'tam' },
-      { en: 'right', cs: 'správně' },
-      { en: 'wrong', cs: 'špatně' },
-      { en: 'okay', cs: 'v pohodě' },
-      { en: 'fine', cs: 'v pořádku' }
-    ];
-
-    const people = [
-      { en: 'he', cs: 'on' },
-      { en: 'she', cs: 'ona' },
-      { en: 'they', cs: 'oni' },
-      { en: 'we', cs: 'my' }
-    ];
-
-    const irregularPast = {
-      go: 'go',
-      come: 'come',
-      see: 'see',
-      hear: 'hear',
-      eat: 'eat',
-      drink: 'drink',
-      buy: 'buy',
-      take: 'take',
-      give: 'give',
-      find: 'find',
-      make: 'make',
-      read: 'read',
-      meet: 'meet',
-      speak: 'speak',
-      have: 'have',
-      do: 'do'
-    };
-
-    function chunk(arr, size) {
-      const out = [];
-      for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
-      return out;
-    }
-
-    function take(arr, n, offset = 0) {
-      const out = [];
-      for (let i = 0; i < n; i++) out.push(arr[(i + offset) % arr.length]);
-      return out;
-    }
+    const STORAGE_KEY = 'englishGymStateV2';
 
     function createChapter(id, title, pattern, items) {
       return { id, title, pattern, items: items.map((item, index) => ({ ...item, id: `${id}-${index}` })) };
@@ -702,6 +617,10 @@
       totalAnswered: 0
     };
 
+    const synth = typeof window !== 'undefined' ? window.speechSynthesis : null;
+    const speechSupported = !!(synth && typeof window.SpeechSynthesisUtterance !== 'undefined');
+    let availableVoices = [];
+    let selectedVoice = null;
     let state = loadState();
 
     const el = {
@@ -721,10 +640,12 @@
       showBtn: document.getElementById('showBtn'),
       correctBtn: document.getElementById('correctBtn'),
       wrongBtn: document.getElementById('wrongBtn'),
+      speakBtn: document.getElementById('speakBtn'),
       resetWrongBtn: document.getElementById('resetWrongBtn'),
       spaceKeyBtn: document.getElementById('spaceKeyBtn'),
       wrongKeyBtn: document.getElementById('wrongKeyBtn'),
-      resetTodayBtn: document.getElementById('resetTodayBtn')
+      resetTodayBtn: document.getElementById('resetTodayBtn'),
+      speakKeyBtn: document.getElementById('speakKeyBtn')
     };
 
     function loadState() {
@@ -741,18 +662,87 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
-    function getPool() {
-      if (state.mode === 'all') return allItems;
-      if (state.mode === 'wrong') {
-        const wrongIds = Object.keys(state.wrongBank).filter(id => state.wrongBank[id] > 0);
-        const wrongPool = allItems.filter(item => wrongIds.includes(item.id));
-        return wrongPool.length ? wrongPool : getChapterPool(state.chapterId);
-      }
-      return getChapterPool(state.chapterId);
+    function loadVoices() {
+      if (!speechSupported) return;
+      availableVoices = synth.getVoices();
+      selectedVoice =
+        availableVoices.find((voice) => voice.lang === 'en-US') ||
+        availableVoices.find((voice) => voice.lang === 'en-GB') ||
+        availableVoices.find((voice) => voice.lang && voice.lang.toLowerCase().startsWith('en')) ||
+        null;
+      updateSpeechButtons();
+    }
+
+    function currentItem() {
+      return allItems.find((item) => item.id === state.currentId) || null;
+    }
+
+    function stopSpeaking() {
+      if (!speechSupported) return;
+      synth.cancel();
+      el.speakBtn.classList.remove('speak-active');
+      el.speakKeyBtn.classList.remove('speak-active');
+    }
+
+    function updateSpeechButtons() {
+      const item = currentItem();
+      const canSpeak = speechSupported && state.answerVisible && !!(item && item.en);
+      el.speakBtn.disabled = !canSpeak;
+      el.speakKeyBtn.disabled = !canSpeak;
+
+      const label = canSpeak
+        ? 'Přehrát anglickou větu'
+        : speechSupported
+          ? 'Nejdřív zobraz anglickou větu mezerníkem'
+          : 'Tento prohlížeč nepodporuje hlasové čtení';
+
+      el.speakBtn.title = label;
+      el.speakKeyBtn.title = label;
+      el.speakBtn.setAttribute('aria-label', label);
+      el.speakKeyBtn.setAttribute('aria-label', label);
+    }
+
+    function speakCurrentSentence() {
+      const item = currentItem();
+      if (!speechSupported || !state.answerVisible || !item || !item.en) return;
+
+      synth.cancel();
+      const utterance = new SpeechSynthesisUtterance(item.en);
+      utterance.lang = selectedVoice?.lang || 'en-US';
+      utterance.rate = 0.92;
+      utterance.pitch = 1;
+      if (selectedVoice) utterance.voice = selectedVoice;
+
+      utterance.onstart = () => {
+        el.speakBtn.classList.add('speak-active');
+        el.speakKeyBtn.classList.add('speak-active');
+      };
+
+      utterance.onend = () => {
+        el.speakBtn.classList.remove('speak-active');
+        el.speakKeyBtn.classList.remove('speak-active');
+      };
+
+      utterance.onerror = () => {
+        el.speakBtn.classList.remove('speak-active');
+        el.speakKeyBtn.classList.remove('speak-active');
+      };
+
+      synth.speak(utterance);
     }
 
     function getChapterPool(chapterId) {
-      return allItems.filter(item => item.chapterId === chapterId);
+      return allItems.filter((item) => item.chapterId === chapterId);
+    }
+
+    function getPool() {
+      if (state.mode === 'all') return allItems;
+      if (state.mode === 'wrong') {
+        const wrongIds = Object.keys(state.wrongBank).filter((id) => state.wrongBank[id] > 0);
+        const wrongPool = allItems.filter((item) => wrongIds.includes(item.id));
+        return wrongPool.length ? wrongPool : getChapterPool(state.chapterId);
+      }
+      return getChapterPool(state.chapterId);
     }
 
     function weightedPick(pool) {
@@ -761,21 +751,21 @@
       for (const item of pool) {
         const wrongCount = state.wrongBank[item.id] || 0;
         const weight = 1 + Math.min(wrongCount * 3, 15);
-        for (let i = 0; i < weight; i++) expanded.push(item);
+        for (let i = 0; i < weight; i += 1) expanded.push(item);
       }
+
       let pick = expanded[Math.floor(Math.random() * expanded.length)];
       if (pool.length > 1 && state.currentId === pick.id) {
-        const alternatives = expanded.filter(item => item.id !== state.currentId);
-        if (alternatives.length) pick = alternatives[Math.floor(Math.random() * alternatives.length)];
+        const alternatives = expanded.filter((item) => item.id !== state.currentId);
+        if (alternatives.length) {
+          pick = alternatives[Math.floor(Math.random() * alternatives.length)];
+        }
       }
       return pick;
     }
 
-    function currentItem() {
-      return allItems.find(item => item.id === state.currentId) || null;
-    }
-
     function nextItem() {
+      stopSpeaking();
       const pool = getPool();
       const item = weightedPick(pool);
       state.currentId = item ? item.id : null;
@@ -785,7 +775,10 @@
     }
 
     function showAnswer() {
-      if (!state.currentId) nextItem();
+      if (!state.currentId) {
+        nextItem();
+        return;
+      }
       state.answerVisible = true;
       saveState();
       render();
@@ -802,11 +795,13 @@
       state.seenToday += 1;
       state.totalAnswered += 1;
       state.streak += 1;
+
       const id = state.currentId;
       if (state.wrongBank[id]) {
         state.wrongBank[id] = Math.max(0, state.wrongBank[id] - 1);
         if (state.wrongBank[id] === 0) delete state.wrongBank[id];
       }
+
       saveState();
       nextItem();
     }
@@ -817,8 +812,7 @@
       state.seenToday += 1;
       state.totalAnswered += 1;
       state.streak = 0;
-      const id = state.currentId;
-      state.wrongBank[id] = (state.wrongBank[id] || 0) + 1;
+      state.wrongBank[state.currentId] = (state.wrongBank[state.currentId] || 0) + 1;
       saveState();
       nextItem();
     }
@@ -840,7 +834,7 @@
 
     function populateChapterSelect() {
       el.chapterSelect.innerHTML = chapters
-        .map(ch => `<option value="${ch.id}">${ch.title} (${ch.items.length})</option>`)
+        .map((ch) => `<option value="${ch.id}">${ch.title} (${ch.items.length})</option>`)
         .join('');
       el.chapterSelect.value = state.chapterId;
       el.modeSelect.value = state.mode;
@@ -864,6 +858,7 @@
         el.hintLine.textContent = 'Vyber kapitolu nebo změň režim.';
         el.progressFill.style.width = '0%';
         el.progressText.textContent = '0 / 0';
+        updateSpeechButtons();
         return;
       }
 
@@ -872,7 +867,7 @@
       el.czechPrompt.textContent = item.cs;
       el.englishAnswer.textContent = state.answerVisible ? item.en : '…';
       el.hintLine.innerHTML = state.answerVisible
-        ? '<span class="success">Mezerník</span> = měl jsem to dobře • <span class="danger">X</span> = měl jsem to špatně'
+        ? '<span class="success">Mezerník</span> = měl jsem to dobře • <span class="danger">X</span> = měl jsem to špatně • <span class="muted">V</span> = přehrát větu'
         : 'Řekni si to nahlas. Pak dej <strong>mezerník</strong>.';
 
       const answered = state.correctToday + state.wrongToday;
@@ -880,6 +875,7 @@
       const percent = Math.min((answered / totalForBar) * 100, 100);
       el.progressFill.style.width = `${percent}%`;
       el.progressText.textContent = `${answered} odpovědí dnes • ${pool.length} vět v balíku`;
+      updateSpeechButtons();
     }
 
     el.chapterSelect.addEventListener('change', (e) => {
@@ -897,13 +893,17 @@
     el.showBtn.addEventListener('click', showAnswer);
     el.correctBtn.addEventListener('click', handleSpaceAction);
     el.wrongBtn.addEventListener('click', markWrong);
+    el.speakBtn.addEventListener('click', speakCurrentSentence);
     el.resetWrongBtn.addEventListener('click', resetWrongBank);
+
     el.spaceKeyBtn.addEventListener('click', handleSpaceAction);
     el.wrongKeyBtn.addEventListener('click', markWrong);
     el.resetTodayBtn.addEventListener('click', resetToday);
+    el.speakKeyBtn.addEventListener('click', speakCurrentSentence);
 
     document.addEventListener('keydown', (e) => {
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+
       if (e.code === 'Space') {
         e.preventDefault();
         handleSpaceAction();
@@ -913,8 +913,21 @@
       } else if (e.key === 'r' || e.key === 'R') {
         e.preventDefault();
         resetToday();
+      } else if (e.key === 'v' || e.key === 'V') {
+        e.preventDefault();
+        speakCurrentSentence();
       }
     });
+
+    if (speechSupported) {
+      loadVoices();
+      if (typeof synth.onvoiceschanged !== 'undefined') {
+        synth.onvoiceschanged = loadVoices;
+      }
+    } else {
+      el.speakBtn.disabled = true;
+      el.speakKeyBtn.disabled = true;
+    }
 
     populateChapterSelect();
     if (!state.currentId) nextItem();
